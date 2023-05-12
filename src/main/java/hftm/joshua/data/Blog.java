@@ -1,14 +1,22 @@
 package hftm.joshua.data;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import lombok.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
-
+@Data
+@NoArgsConstructor
+@Entity
 public class Blog {
+    @Id
+    @GeneratedValue
+    private Long id;
     private String title;
     private String content;
+
+    public Blog(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }
