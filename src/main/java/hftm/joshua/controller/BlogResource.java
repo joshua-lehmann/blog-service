@@ -18,7 +18,7 @@ public class BlogResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Blog> hello() {
+    public List<Blog> getAllBlogs() {
         return blogService.getAllBlogs();
     }
 
