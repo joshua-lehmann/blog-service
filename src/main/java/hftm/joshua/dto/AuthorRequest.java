@@ -3,13 +3,14 @@ package hftm.joshua.dto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
-public class BlogRequest {
+@ToString
+public class AuthorRequest {
     @NotBlank
-    private String title;
+    private String firstName;
     @NotBlank
-    private String content;
-    private Long authorId;
+    private String lastName;
 }

@@ -1,13 +1,14 @@
 package hftm.joshua.controller;
 
 import hftm.joshua.data.Blog;
+import hftm.joshua.dto.AuthorRequest;
 import hftm.joshua.dto.BlogRequest;
 import hftm.joshua.service.BlogService;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.ExampleObject;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
@@ -18,6 +19,7 @@ public class BlogResource {
 
     @Inject
     BlogService blogService;
+
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -33,9 +35,14 @@ public class BlogResource {
     }
 
     @POST
+    @RequestBody(description = "The Author Object to create", content = @Content(schema = @Schema(implementation = AuthorRequest.class),
+            examples = {
+                    @ExampleObject(name = "Blog with no Author", value = "{\"title\": \"My new Article\", \"content\": \"Some really great content\"}"),
+                    @ExampleObject(name = "Blog with Author", value = "{\"title\": \"The Authors Article\", \"content\": \"Some really great content from the Author\", \"authorId\": \"1\"}")
+            }
+    ))
     @Consumes(MediaType.APPLICATION_JSON)
-    @Transactional
-    public void createBlog(@RequestBody(description = "The Blog to create", required = true, content = @Content(schema = @Schema(implementation = BlogRequest.class))) BlogRequest blogRequest) {
+    public void createBlog(BlogRequest blogRequest) {
         blogService.addBlog(blogRequest);
     }
 

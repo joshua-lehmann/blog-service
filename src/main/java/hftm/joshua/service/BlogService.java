@@ -3,11 +3,12 @@ package hftm.joshua.service;
 import hftm.joshua.data.Author;
 import hftm.joshua.data.Blog;
 import hftm.joshua.dto.BlogRequest;
+import hftm.joshua.mapper.BlogMapper;
 import hftm.joshua.repository.AuthorRepository;
 import hftm.joshua.repository.BlogRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.jboss.logging.Logger;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -19,19 +20,18 @@ public class BlogService {
     @Inject
     AuthorRepository authorRepository;
     @Inject
-    Logger logger;
+    BlogMapper blogMapper;
 
     public List<Blog> getAllBlogs() {
-        logger.info("Getting all blogs");
         return blogRepository.listAll();
     }
 
+    @Transactional
     public void addBlog(BlogRequest blogRequest) {
-        Blog blog = new Blog(blogRequest.getTitle(), blogRequest.getContent());
+        Blog blog = blogMapper.fromResource(blogRequest);
 
         if (blogRequest.getAuthorId() != null) {
             Author author = authorRepository.findById(blogRequest.getAuthorId());
-            authorRepository.persist(author);
             blog.setAuthor(author);
         }
         blogRepository.persist(blog);
