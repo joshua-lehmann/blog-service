@@ -1,7 +1,9 @@
 package hftm.joshua;
 
+import io.quarkus.logging.Log;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        Log.info("Blog Service started");
     }
 }
