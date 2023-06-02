@@ -1,19 +1,22 @@
 package hftm.joshua.data;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import lombok.*;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @Entity
-public class Blog {
-    @Id
-    @GeneratedValue
-    private Long id;
+public class Blog extends BaseEntity {
+
     private String title;
     private String content;
+
+    @ManyToOne
+    @JoinColumn(name = "AUTHOR_ID", referencedColumnName = "ID")
+    private Author author;
 
     public Blog(String title, String content) {
         this.title = title;
