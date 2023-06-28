@@ -1,5 +1,10 @@
 package hftm.joshua.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import hftm.joshua.data.Author;
 import hftm.joshua.data.Blog;
 import hftm.joshua.dto.BlogRequest;
@@ -22,6 +27,7 @@ public class BlogService {
     @Inject
     BlogMapper blogMapper;
 
+
     public List<Blog> getAllBlogs() {
         return blogRepository.listAll();
     }
@@ -39,6 +45,13 @@ public class BlogService {
 
     public Blog getBlog(Long id) {
         return blogRepository.findById(id);
+    }
+
+
+    public Blog applyPatchToBlog(JsonPatch patch, Blog targetBlog) throws JsonPatchException, JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode patched = patch.apply(objectMapper.convertValue(targetBlog, JsonNode.class));
+        return objectMapper.treeToValue(patched, Blog.class);
     }
 
 }

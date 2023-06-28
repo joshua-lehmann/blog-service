@@ -13,6 +13,7 @@ public class Blog extends BaseEntity {
 
     private String title;
     private String content;
+    private Integer likes;
 
     @ManyToOne
     @JoinColumn(name = "AUTHOR_ID", referencedColumnName = "ID")
