@@ -33,7 +33,7 @@ public class BlogService {
     }
 
     @Transactional
-    public void addBlog(BlogRequest blogRequest) {
+    public Long addBlog(BlogRequest blogRequest) {
         Blog blog = blogMapper.fromResource(blogRequest);
 
         if (blogRequest.getAuthorId() != null) {
@@ -41,6 +41,7 @@ public class BlogService {
             blog.setAuthor(author);
         }
         blogRepository.persist(blog);
+        return blog.getId();
     }
 
     public Blog getBlog(Long id) {
@@ -52,6 +53,10 @@ public class BlogService {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode patched = patch.apply(objectMapper.convertValue(targetBlog, JsonNode.class));
         return objectMapper.treeToValue(patched, Blog.class);
+    }
+
+    public boolean deleteBlog(Long id) {
+        return blogRepository.deleteById(id);
     }
 
 }

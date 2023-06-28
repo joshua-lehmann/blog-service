@@ -11,11 +11,13 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.apache.commons.beanutils.BeanUtils;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.ExampleObject;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @Path("/blog")
@@ -40,13 +42,17 @@ public class BlogResource {
     @POST
     @RequestBody(description = "The Blog Object to create", content = @Content(schema = @Schema(implementation = BlogRequest.class),
             examples = {
-                    @ExampleObject(name = "Blog with no Author", value = "{\"title\": \"My new Article\", \"content\": \"Some really great content\"}"),
-                    @ExampleObject(name = "Blog with Author", value = "{\"title\": \"The Authors Article\", \"content\": \"Some really great content from the Author\", \"authorId\": \"1\"}")
+                    @ExampleObject(name = "Blog with no Author", value = """
+                            {"title": "My new Article", "content": "Some really great content"}
+                            """),
+                    @ExampleObject(name = "Blog with Author", value = """
+                            {"title": "The Authors Article", "content": "Some really great content from the Author", "authorId": "1"}
+                            """)
             }
     ))
     @Consumes(MediaType.APPLICATION_JSON)
-    public void createBlog(BlogRequest blogRequest) {
-        blogService.addBlog(blogRequest);
+    public Response createBlog(BlogRequest blogRequest) {
+        return Response.ok().status(Response.Status.CREATED).entity(blogService.addBlog(blogRequest)).build();
     }
 
     @PATCH
@@ -54,28 +60,34 @@ public class BlogResource {
     @Consumes("application/json-patch+json")
     @RequestBody(description = "Update Blog with with Patch, fields which are provided are updated, non provided are left as is", content = @Content(schema = @Schema(implementation = BlogRequest.class),
             examples = {
-                    @ExampleObject(name = "Update Like Count", value = "[\n" +
-                            "    {\n" +
-                            "        \"op\": \"replace\",\n" +
-                            "        \"path\": \"/likes\",\n" +
-                            "        \"value\": 5\n" +
-                            "    }\n" +
-                            "]")
+                    @ExampleObject(name = "Update Like Count", value = """
+                            [
+                                {
+                                    "op": "replace",
+                                    "path": "/likes",
+                                    "value": 5
+                                }
+                            ]"""),
             }
     ))
-
     @Transactional
     public Response patchBlog(JsonPatch blogPatch, @PathParam("id") Long id) {
         try {
             Blog blog = blogService.getBlog(id);
             Blog patchedBlog = blogService.applyPatchToBlog(blogPatch, blog);
-            // TODO: set all properties from patched blog to blog entity so that panache knows there were changes
+            BeanUtils.copyProperties(blog, patchedBlog);
             return Response.ok(blog).build();
         } catch (JsonPatchException | JsonProcessingException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
-
     }
 
+    @DELETE
+    @Path("/{id}")
+    public Response deleteBlog(@PathParam("id") Long id) {
+        return blogService.deleteBlog(id) ? Response.ok().build() : Response.status(Response.Status.NOT_FOUND).build();
+    }
 
 }
