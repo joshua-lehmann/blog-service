@@ -49,6 +49,7 @@ public class AuthorResource {
 
     @DELETE
     @Path("/{id}")
+    @Transactional
     public Response deleteAuthor(@PathParam("id") Long id) {
         if (authorRepository.deleteById(id)) {
             return Response.status(Response.Status.NOT_FOUND).entity("Entity with ID: %d not found".formatted(id)).build();

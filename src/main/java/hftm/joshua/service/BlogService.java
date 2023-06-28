@@ -55,6 +55,7 @@ public class BlogService {
         return objectMapper.treeToValue(patched, Blog.class);
     }
 
+    @Transactional
     public boolean deleteBlog(Long id) {
         return blogRepository.deleteById(id);
     }
