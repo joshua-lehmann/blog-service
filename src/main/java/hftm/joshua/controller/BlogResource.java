@@ -7,6 +7,7 @@ import hftm.joshua.data.Blog;
 import hftm.joshua.dto.BlogRequest;
 import hftm.joshua.service.BlogService;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -53,7 +54,6 @@ public class BlogResource {
     @Consumes("application/json-patch+json")
     @RequestBody(description = "Update Blog with with Patch, fields which are provided are updated, non provided are left as is", content = @Content(schema = @Schema(implementation = BlogRequest.class),
             examples = {
-                    @ExampleObject(name = "Updated content", value = "{\"content\": \"New Content\"}"),
                     @ExampleObject(name = "Update Like Count", value = "[\n" +
                             "    {\n" +
                             "        \"op\": \"replace\",\n" +
@@ -63,11 +63,14 @@ public class BlogResource {
                             "]")
             }
     ))
+
+    @Transactional
     public Response patchBlog(JsonPatch blogPatch, @PathParam("id") Long id) {
         try {
             Blog blog = blogService.getBlog(id);
-            Blog blogPatched = blogService.applyPatchToBlog(blogPatch, blog);
-            return Response.ok(blogPatched).build();
+            Blog patchedBlog = blogService.applyPatchToBlog(blogPatch, blog);
+            // TODO: set all properties from patched blog to blog entity so that panache knows there were changes
+            return Response.ok(blog).build();
         } catch (JsonPatchException | JsonProcessingException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
