@@ -15,9 +15,22 @@ This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
-### API Endpoints
+### Available API Endpoints
 This service exposes several API endpoints, to get an overview use the included OpenAPI specification file at http://localhost:8000/q/openapi
 You can also explore the API interactively using the included Swagger UI at http://localhost:8000/q/swagger-ui
+
+### Available functionalities
+
+- Create a new blog post
+- Get a list of all blog posts
+- Get a single blog post by id
+- Create a new author
+- Get a list of all authors
+- Get a single author by id
+- Update a blog post
+- Delete a blog post
+- Create a new comment for a blog post
+-
 
 ## Running the application in dev mode
 
