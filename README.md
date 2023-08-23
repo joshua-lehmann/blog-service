@@ -1,25 +1,32 @@
 # Introduction
+
 Java Project containing the backend service for a blog application
 
 <!-- TOC -->
 * [Introduction](#introduction)
-  * [blog-service](#blog-service)
-    * [API Endpoints](#api-endpoints)
+* [blog-service](#blog-service)
+    * [Available API Endpoints](#available-api-endpoints)
+    * [Available functionalities](#available-functionalities)
+    * [Security](#security)
+        * [Roles](#roles)
+        * [Endpoints per role](#endpoints-per-role)
   * [Running the application in dev mode](#running-the-application-in-dev-mode)
   * [Packaging and running the application](#packaging-and-running-the-application)
 <!-- TOC -->
 
-## blog-service
+# blog-service
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
-### Available API Endpoints
-This service exposes several API endpoints, to get an overview use the included OpenAPI specification file at http://localhost:8000/q/openapi
+## Available API Endpoints
+
+This service exposes several API endpoints, to get an overview use the included OpenAPI specification file
+at http://localhost:8000/q/openapi
 You can also explore the API interactively using the included Swagger UI at http://localhost:8000/q/swagger-ui
 
-### Available functionalities
+## Available functionalities
 
 - Create a new blog post
 - Get a list of all blog posts
@@ -30,11 +37,60 @@ You can also explore the API interactively using the included Swagger UI at http
 - Update a blog post
 - Delete a blog post
 - Create a new comment for a blog post
--
+
+## Security
+
+This service will use OPENID CONNECT (OIDC) for authentication and authorization.
+The service will be configured to use Keycloak as the OIDC provider. In dev mode the service will use a local Keycloak
+instance which is a docker container.
+Before starting the Service make sure to copy the config file for
+keycloak [quarkus-realm.json](./src/main/java/hftm/joshua/config/quarkus-realm.json) to the `target/classes` folder.
+After starting the service in dev mode you can use the following request to obtain a token for a user with the role "
+user":
+
+```shell script
+curl -v -X POST -u "mein-client:mein-secret" -d "username=alice&password=alice&grant_type=password" http://keycloak:8180/realms/mein-realm/protocol/openid-connect/token
+```
+
+And for getting a token for a user with the role "admin":
+
+```shell script
+curl -v -X POST -u "mein-client:mein-secret" -d "username=bob&password=bob&grant_type=password" http://keycloak:8180/realms/mein-realm/protocol/openid-connect/token
+```
+
+### Roles
+
+The following roles are available:
+
+| Role      | Description                                                                                          |
+|-----------|------------------------------------------------------------------------------------------------------|
+| Anonymous | The role everyone has if they are not authenticated                                                  |
+| User      | Standard Role for every user after authentication, which allows to do basic operations               |
+| Admin     | Roles for users with special privileges which is only granted to specific users after authentication |  
+
+### Endpoints per role
+
+| Role      | Entity  | Endpoint     | Method |
+|-----------|---------|--------------|--------|
+| Anonymous | Author  | /author      | GET    |
+| User      | Author  | /author      | POST   |
+| Anonymous | Author  | /author/{id} | GET    |
+| Admin     | Author  | /author/{id} | DELETE |
+| Anonymous | Blog    | /blog        | GET    |
+| User      | Blog    | /blog        | POST   |
+| Anonymous | Blog    | /blog/{id}   | GET    |
+| Admin     | Blog    | /blog/{id}   | DELETE |
+| User      | Blog    | /blog/{id}   | PATCH  |
+| Anonymous | Comment | /comment     | GET    |
+| User      | Comment | /comment     | POST   |
+
+Basically an anonymous user can only read data, while a user can also create new data. An admin can also delete data.
+This might be extended in the future with new endpoints which allows a user to delete their own data.
 
 ## Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
+
 ```shell script
 ./mvnw compile quarkus:dev
 ```
@@ -44,15 +100,18 @@ You can run your application in dev mode that enables live coding using:
 ## Packaging and running the application
 
 The application can be packaged using:
+
 ```shell script
 ./mvnw package
 ```
+
 It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
 Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
 
 The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
 
 If you want to build an _über-jar_, execute the following command:
+
 ```shell script
 ./mvnw package -Dquarkus.package.type=uber-jar
 ```
