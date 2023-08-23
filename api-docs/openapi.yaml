@@ -1,0 +1,302 @@
+---
+openapi: 3.0.3
+info:
+  title: blog-service API
+  version: 1.0.0-SNAPSHOT
+servers:
+  - url: http://localhost:8080
+    description: Auto generated value
+  - url: http://0.0.0.0:8080
+    description: Auto generated value
+paths:
+  /author:
+    get:
+      tags:
+        - Author Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Author'
+    post:
+      tags:
+        - Author Resource
+      requestBody:
+        description: The Author Object to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorRequest'
+            examples:
+              Simple Example:
+                value:
+                  firstName: Joshua
+                  lastName: Lehmann
+      responses:
+        "201":
+          description: Created
+  /author/{id}:
+    get:
+      tags:
+        - Author Resource
+      parameters:
+        - name: id
+          in: path
+          description: The id of the author to retrieve
+          required: true
+          schema:
+            format: int64
+            type: integer
+          example: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+    delete:
+      tags:
+        - Author Resource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
+      responses:
+        "200":
+          description: OK
+  /blog:
+    get:
+      tags:
+        - Blog Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Blog'
+    post:
+      tags:
+        - Blog Resource
+      requestBody:
+        description: The Blog Object to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlogRequest'
+            examples:
+              Blog with no Author:
+                value:
+                  title: My new Article
+                  content: Some really great content
+              Blog with Author:
+                value:
+                  title: The Authors Article
+                  content: Some really great content from the Author
+                  authorId: "1"
+      responses:
+        "200":
+          description: OK
+  /blog/{id}:
+    get:
+      tags:
+        - Blog Resource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blog'
+    delete:
+      tags:
+        - Blog Resource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
+      responses:
+        "200":
+          description: OK
+    patch:
+      tags:
+        - Blog Resource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
+      requestBody:
+        description: "Update Blog with with Patch, fields which are provided are updated,\
+          \ non provided are left as is"
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/BlogRequest'
+            examples:
+              Update Like Count:
+                value:
+                  - op: replace
+                    path: /likes
+                    value: 5
+      responses:
+        "200":
+          description: OK
+  /comment:
+    get:
+      tags:
+        - Comment Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+    post:
+      tags:
+        - Comment Resource
+      requestBody:
+        description: The Comment Object to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentRequest'
+            examples:
+              Comment with AuthorId and BlogId:
+                value:
+                  blogId: 1
+                  content: My very first comment for Blog 1
+                  authorId: 1
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    Author:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        createdAt:
+          $ref: '#/components/schemas/Date'
+        updatedAt:
+          $ref: '#/components/schemas/Date'
+        firstName:
+          type: string
+        lastName:
+          type: string
+    AuthorRequest:
+      required:
+        - firstName
+        - lastName
+      type: object
+      properties:
+        firstName:
+          pattern: \S
+          type: string
+        lastName:
+          pattern: \S
+          type: string
+    Blog:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        createdAt:
+          $ref: '#/components/schemas/Date'
+        updatedAt:
+          $ref: '#/components/schemas/Date'
+        title:
+          type: string
+        content:
+          type: string
+        likes:
+          format: int32
+          type: integer
+        author:
+          $ref: '#/components/schemas/Author'
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+    BlogRequest:
+      required:
+        - title
+        - content
+      type: object
+      properties:
+        title:
+          pattern: \S
+          type: string
+        content:
+          pattern: \S
+          type: string
+        authorId:
+          format: int64
+          type: integer
+    Comment:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        createdAt:
+          $ref: '#/components/schemas/Date'
+        updatedAt:
+          $ref: '#/components/schemas/Date'
+        content:
+          type: string
+        author:
+          $ref: '#/components/schemas/Author'
+        blog:
+          $ref: '#/components/schemas/Blog'
+    CommentRequest:
+      required:
+        - blogId
+        - authorId
+      type: object
+      properties:
+        blogId:
+          format: int64
+          type: integer
+        authorId:
+          format: int64
+          type: integer
+        content:
+          type: string
+    Date:
+      format: date
+      type: string
+      example: 2022-03-10
+  securitySchemes:
+    SecurityScheme:
+      type: openIdConnect
+      description: Authentication
+      openIdConnectUrl: http://localhost:8180/realms/quarkus/.well-known/openid-configuration
