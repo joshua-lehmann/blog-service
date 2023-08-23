@@ -25,6 +25,9 @@ If you want to learn more about Quarkus, please visit its website: https://quark
 This service exposes several API endpoints, to get an overview use the included OpenAPI specification file
 at http://localhost:8000/q/openapi
 You can also explore the API interactively using the included Swagger UI at http://localhost:8000/q/swagger-ui
+Alternatively you can also view the auto generated file at [openapi.json](./api-docs/openapi.json)
+Somehow the build in the pipeline fails if the autogeneration of the openapi file is enabled, so for now it is commented
+out in the application.properties file.
 
 ## Available functionalities
 
