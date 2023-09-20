@@ -6,6 +6,7 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import hftm.joshua.data.Blog;
 import hftm.joshua.dto.BlogRequest;
 import hftm.joshua.service.BlogService;
+import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -40,6 +41,7 @@ public class BlogResource {
     }
 
     @POST
+    @Authenticated
     @RequestBody(description = "The Blog Object to create", content = @Content(schema = @Schema(implementation = BlogRequest.class),
             examples = {
                     @ExampleObject(name = "Blog with no Author", value = """
