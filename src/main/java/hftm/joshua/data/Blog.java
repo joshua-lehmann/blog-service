@@ -19,6 +19,7 @@ public class Blog extends BaseEntity {
     private String title;
     private String content;
     private Integer likes;
+    private boolean validated = false;
 
     @ManyToOne
     @JoinColumn(name = "author_id", referencedColumnName = "id")
