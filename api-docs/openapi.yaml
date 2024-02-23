@@ -4,15 +4,15 @@ info:
   title: blog-service API
   version: 1.0.0-SNAPSHOT
 servers:
-  - url: http://localhost:8080
-    description: Auto generated value
-  - url: http://0.0.0.0:8080
-    description: Auto generated value
+- url: http://localhost:8080
+  description: Auto generated value
+- url: http://0.0.0.0:8080
+  description: Auto generated value
 paths:
   /author:
     get:
       tags:
-        - Author Resource
+      - Author Resource
       responses:
         "200":
           description: OK
@@ -24,7 +24,7 @@ paths:
                   $ref: '#/components/schemas/Author'
     post:
       tags:
-        - Author Resource
+      - Author Resource
       requestBody:
         description: The Author Object to create
         content:
@@ -42,16 +42,16 @@ paths:
   /author/{id}:
     get:
       tags:
-        - Author Resource
+      - Author Resource
       parameters:
-        - name: id
-          in: path
-          description: The id of the author to retrieve
-          required: true
-          schema:
-            format: int64
-            type: integer
-          example: 1
+      - name: id
+        in: path
+        description: The id of the author to retrieve
+        required: true
+        schema:
+          format: int64
+          type: integer
+        example: 1
       responses:
         "200":
           description: OK
@@ -61,21 +61,21 @@ paths:
                 $ref: '#/components/schemas/Author'
     delete:
       tags:
-        - Author Resource
+      - Author Resource
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            format: int64
-            type: integer
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
       responses:
         "200":
           description: OK
   /blog:
     get:
       tags:
-        - Blog Resource
+      - Blog Resource
       responses:
         "200":
           description: OK
@@ -87,7 +87,7 @@ paths:
                   $ref: '#/components/schemas/Blog'
     post:
       tags:
-        - Blog Resource
+      - Blog Resource
       requestBody:
         description: The Blog Object to create
         content:
@@ -110,14 +110,14 @@ paths:
   /blog/{id}:
     get:
       tags:
-        - Blog Resource
+      - Blog Resource
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            format: int64
-            type: integer
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
       responses:
         "200":
           description: OK
@@ -127,27 +127,27 @@ paths:
                 $ref: '#/components/schemas/Blog'
     delete:
       tags:
-        - Blog Resource
+      - Blog Resource
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            format: int64
-            type: integer
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
       responses:
         "200":
           description: OK
     patch:
       tags:
-        - Blog Resource
+      - Blog Resource
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            format: int64
-            type: integer
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
       requestBody:
         description: "Update Blog with with Patch, fields which are provided are updated,\
           \ non provided are left as is"
@@ -158,16 +158,16 @@ paths:
             examples:
               Update Like Count:
                 value:
-                  - op: replace
-                    path: /likes
-                    value: 5
+                - op: replace
+                  path: /likes
+                  value: 5
       responses:
         "200":
           description: OK
   /comment:
     get:
       tags:
-        - Comment Resource
+      - Comment Resource
       responses:
         "200":
           description: OK
@@ -179,7 +179,7 @@ paths:
                   $ref: '#/components/schemas/Comment'
     post:
       tags:
-        - Comment Resource
+      - Comment Resource
       requestBody:
         description: The Comment Object to create
         content:
@@ -195,6 +195,17 @@ paths:
       responses:
         "200":
           description: OK
+  /hello:
+    get:
+      tags:
+      - Greeting Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
 components:
   schemas:
     Author:
@@ -213,8 +224,8 @@ components:
           type: string
     AuthorRequest:
       required:
-        - firstName
-        - lastName
+      - firstName
+      - lastName
       type: object
       properties:
         firstName:
@@ -240,6 +251,8 @@ components:
         likes:
           format: int32
           type: integer
+        validated:
+          type: boolean
         author:
           $ref: '#/components/schemas/Author'
         comments:
@@ -248,8 +261,8 @@ components:
             $ref: '#/components/schemas/Comment'
     BlogRequest:
       required:
-        - title
-        - content
+      - title
+      - content
       type: object
       properties:
         title:
@@ -279,8 +292,8 @@ components:
           $ref: '#/components/schemas/Blog'
     CommentRequest:
       required:
-        - blogId
-        - authorId
+      - blogId
+      - authorId
       type: object
       properties:
         blogId:
@@ -297,6 +310,6 @@ components:
       example: 2022-03-10
   securitySchemes:
     SecurityScheme:
-      type: openIdConnect
+      type: http
       description: Authentication
-      openIdConnectUrl: http://localhost:8180/realms/quarkus/.well-known/openid-configuration
+      scheme: basic
