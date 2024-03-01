@@ -127,5 +127,8 @@ The message contains the id of the post and the text of the post. The consumer o
 The text-validator-service will then produce a message to the Kafka topic `text-validation-response` with the result of the validation (how is validation done [is explained here](https://github.com/joshua-lehmann/text-validator/pkgs/container/text-validator#validation-process)). The consumer of this message is this [blog-service](https://github.com/joshua-lehmann/blog-service). The message is then saved to a mysql database.
 
 ### How to run the full system with docker-compose
-To run the full system with the blog-service, text-validator-service, redpanda and a mysql database you can use the docker-compose file in the root of this project.
-But you need to make sure that you have all necessary images. 
+To run the full system with the blog-service, text-validator-service, redpanda and a mysql database you can use the docker-compose file in the root of this project by running the following command:
+```shell script
+docker-compose up
+```
+All images are public available on GitHub Container Registry. If you want you could also check out both repos and then build the images yourself and then change the image names in the docker-compose file.

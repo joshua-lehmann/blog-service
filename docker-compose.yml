@@ -1,5 +1,5 @@
 version: "3.7"
-name: Distributed Blogging Platform
+name: distributed-blogging-platform
 networks:
   redpanda_network:
     driver: bridge
@@ -87,10 +87,7 @@ services:
     networks:
       - db
   blog-service:
-    image: joshua/blog-service:1.0.0-SNAPSHOT
-#    build:
-#        context: .
-#        dockerfile: src/main/docker/Dockerfile.jvm
+    image: ghcr.io/joshua-lehmann/blog-service:latest
     ports:
       - "8081:8080"
     environment:
@@ -109,7 +106,7 @@ services:
         condition: service_started
 
   text-validator:
-    image: joshua/text-validator:1.0.0-SNAPSHOT
+    image: ghcr.io/joshua-lehmann/text-validator:latest
     networks:
       - redpanda_network
     depends_on:
