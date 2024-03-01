@@ -5,11 +5,11 @@ on:
       - master
   pull_request:
     types: [opened, synchronize, reopened]
+permissions:
+  contents: read
+  packages: write
 jobs:
   build:
-    permissions:
-      contents: read
-      packages: write
     name: Build and analyze
     runs-on: ubuntu-latest
     steps:
@@ -55,9 +55,6 @@ jobs:
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
-        permissions:
-          contents: read
-          packages: write
         with:
           context: .
           file: ./src/main/docker/Dockerfile.jvm
