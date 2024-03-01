@@ -120,3 +120,12 @@ If you want to build an _über-jar_, execute the following command:
 ```
 
 The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+
+## Messaging
+This service is also part of a distributed system and uses Kafka for messaging. Everytime we create a post over the API the service produces a message to the Kafka topic `text-validation` using an Emitter.
+The message contains the id of the post and the text of the post. The consumer of this message is the [text-validator-service](https://github.com/joshua-lehmann/text-validator) which is another Quarkus service responsible for validating the text of the post.
+The text-validator-service will then produce a message to the Kafka topic `text-validation-response` with the result of the validation (how is validation done [is explained here](https://github.com/joshua-lehmann/text-validator?tab=readme-ov-file#explanation)). The consumer of this message is this [blog-service](https://github.com/joshua-lehmann/blog-service). The message is then saved to a mysql database.
+
+### How to run the full system with docker-compose
+To run the full system with the blog-service, text-validator-service, redpanda and a mysql database you can use the docker-compose file in the root of this project.
+But you need to make sure that you have all necessary images. 
