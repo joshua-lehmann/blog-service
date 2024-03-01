@@ -132,3 +132,10 @@ To run the full system with the blog-service, text-validator-service, redpanda a
 docker-compose up
 ```
 All images are public available on GitHub Container Registry. If you want you could also check out both repos and then build the images yourself and then change the image names in the docker-compose file.
+After everything is started you can make a POST request to http://localhost:8081/blog with request body:
+```json
+{
+  "title": "My new Article",
+  "content": "I hate java because it is so stupid and shit"
+}
+```
