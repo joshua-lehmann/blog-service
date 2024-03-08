@@ -36,9 +36,9 @@ public class BlogService {
     @Inject
     BlogMapper blogMapper;
 
-    @Inject
-    @Channel("text-validation")
-    Emitter<TextMessage> validationEmitter;
+//    @Inject
+//    @Channel("text-validation")
+//    Emitter<TextMessage> validationEmitter;
 
 
     public List<Blog> getAllBlogs() {
@@ -56,7 +56,7 @@ public class BlogService {
 
         var savedBlog = persistBlog(blog);
         System.out.println("Sending validation for blog with id:" + savedBlog.getId() + " and text:" + savedBlog.getContent());
-        validationEmitter.send(new TextMessage(savedBlog.getId(), savedBlog.getContent()));
+//        validationEmitter.send(new TextMessage(savedBlog.getId(), savedBlog.getContent()));
 
         return savedBlog.getId();
     }
@@ -71,8 +71,8 @@ public class BlogService {
         return blogRepository.findById(id);
     }
 
-    @Incoming("text-validation-response")
-    @Blocking
+//    @Incoming("text-validation-response")
+//    @Blocking
     @Transactional
     public CompletionStage<Void> setBlogValidation(Message<TextMessage> message) {
         var payload = message.getPayload();
