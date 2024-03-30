@@ -34,4 +34,15 @@ public interface AiService {
             """)
     Sentiment getCommentSentiment(String comment);
 
+
+    @UserMessage("""
+            Your Task is to translate the content of a blog post to a specific language.
+            Please translate the content to the specified language.
+            Translate the content to language: {language}
+            The content to translate:
+            {content}
+            """)
+    String translateBlogContent(String content, String language);
+
+
 }

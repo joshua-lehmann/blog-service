@@ -1,10 +1,7 @@
 package hftm.joshua.data;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +14,8 @@ import java.util.List;
 public class Blog extends BaseEntity {
 
     private String title;
+    @Lob
+    @Column(length = 10000)
     private String content;
     private Integer likes;
     private boolean validated = false;

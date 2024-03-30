@@ -90,4 +90,10 @@ public class BlogResource {
         return blogService.deleteBlog(id) ? Response.ok().build() : Response.status(Response.Status.NOT_FOUND).build();
     }
 
+    @GET
+    @Path("/translate/{id}/{language}")
+    public Response translateBlog(@PathParam("id") Long id, @PathParam("language") String language) {
+        return Response.ok().entity(blogService.translateBlog(id, language)).build();
+    }
+
 }

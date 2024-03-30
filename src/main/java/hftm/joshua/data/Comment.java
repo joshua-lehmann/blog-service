@@ -1,5 +1,6 @@
 package hftm.joshua.data;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -23,7 +24,7 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "blogId", nullable = false)
     private Blog blog;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "sentiment_id", referencedColumnName = "id")
     private Sentiment sentiment;
 

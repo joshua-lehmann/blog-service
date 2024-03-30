@@ -36,6 +36,9 @@ public class BlogService {
     @Inject
     BlogMapper blogMapper;
 
+    @Inject
+    AiService aiService;
+
 //    @Inject
 //    @Channel("text-validation")
 //    Emitter<TextMessage> validationEmitter;
@@ -95,6 +98,13 @@ public class BlogService {
     @Transactional
     public boolean deleteBlog(Long id) {
         return blogRepository.deleteById(id);
+    }
+
+    public Blog translateBlog(Long id, String language) {
+        Blog blog = blogRepository.findById(id);
+        String translatedContent = aiService.translateBlogContent(blog.getContent(), language);
+        blog.setContent(translatedContent);
+        return blog;
     }
 
 }
