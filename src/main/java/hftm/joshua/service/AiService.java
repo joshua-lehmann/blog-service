@@ -10,7 +10,7 @@ import io.quarkiverse.langchain4j.RegisterAiService;
 public interface AiService {
 
     @SystemMessage("""
-            You are working for a blogging website, processing and analyzing comments from users which have been made to a blog post. Your job is to look at the content of the comment and then determine the sentiment of the comment. The sentiment can be positive, negative or neutral. The response is a JSON Document.
+            You are working for a blogging website, processing and analyzing posts and comments from users.
             """)
     @UserMessage("""
             Your Task is to process a blog comment and determine the sentiment of the comment. The comment is always delimited with ---

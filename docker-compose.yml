@@ -66,13 +66,13 @@ services:
             enabled: true
             urls: ["http://redpanda-0:9644"]
     ports:
-      - 8080:8080
+      - "8081:8080"
     depends_on:
       - redpanda-0
   mysql-db:
     image: mysql:8.0
     ports:
-      - "3306:3306"
+      - "3333:3306"
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
       MYSQL_DATABASE: mydb
@@ -89,13 +89,14 @@ services:
   blog-service:
     image: ghcr.io/joshua-lehmann/blog-service:latest
     ports:
-      - "8081:8080"
+      - "8080:8080"
     environment:
       - QUARKUS_HTTP_PORT=8080
       - QUARKUS_DATASOURCE_JDBC_URL=jdbc:mysql://mysql-db:3306/mydb
       - QUARKUS_DATASOURCE_USERNAME=myuser
       - QUARKUS_DATASOURCE_PASSWORD=mypass
       - QUARKUS_DATASOURCE_DRIVER=com.mysql.cj.jdbc.Driver
+      - OPEN_API_KEY=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
     networks:
       - redpanda_network
       - db
