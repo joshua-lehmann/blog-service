@@ -96,7 +96,6 @@ services:
       - QUARKUS_DATASOURCE_USERNAME=myuser
       - QUARKUS_DATASOURCE_PASSWORD=mypass
       - QUARKUS_DATASOURCE_DRIVER=com.mysql.cj.jdbc.Driver
-      - OPEN_API_KEY=PUTYOURKEYHERE
     networks:
       - redpanda_network
       - db
